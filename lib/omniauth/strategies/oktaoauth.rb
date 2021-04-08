@@ -39,7 +39,7 @@ module OmniAuth
         hash = {}
 
         hash[:raw_info] = raw_info unless skip_info?
-        hash[:id_token] = oauth2_access_token.params["id_token"]
+        hash[:id_token] = access_token.params["id_token"]
         hash[:access_token] = access_token.token
         if !options[:skip_jwt] && !access_token.token.nil?
           hash[:id_info] = validated_token(access_token.token)
@@ -82,7 +82,7 @@ module OmniAuth
 
       def callback_phase
         return_value = super
-        unless validated_token(oauth2_access_token.params["id_token"])["nonce"] == session["omniauth.nonce"]
+        unless validated_token(access_token.params["id_token"])["nonce"] == session["omniauth.nonce"]
           fail!(:invalid_nonce)
         end
         return_value
